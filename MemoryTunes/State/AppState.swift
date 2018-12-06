@@ -27,3 +27,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+import ReSwift
+
+struct AppState: StateType {
+  let routingState: RoutingState
+  let menuState: MenuState
+  let categoriesState: CategoriesState
+  let gameState: GameState
+
+}

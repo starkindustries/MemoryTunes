@@ -28,7 +28,13 @@
  * THE SOFTWARE.
  */
 
-import UIKit
+import ReSwift
+
+enum RoutingDestination: String {
+  case menu = "MenuTableViewController"
+  case categories = "CategoriesTableViewController"
+  case game = "GameViewController"
+}
 
 final class AppRouter {
   
@@ -37,5 +43,42 @@ final class AppRouter {
   init(window: UIWindow) {
     navigationController = UINavigationController()
     window.rootViewController = navigationController
+    // 1
+    store.subscribe(self) {
+      $0.select {
+        $0.routingState
+      }
+    }
+  }
+  
+  // 2
+  fileprivate func pushViewController(identifier: String, animated: Bool) {
+    let viewController = instantiateViewController(identifier: identifier)
+    let newViewControllerType = type(of: viewController)
+    if let currentVc = navigationController.topViewController {
+      let currentViewControllerType = type(of: currentVc)
+      if currentViewControllerType == newViewControllerType {
+        return
+      }
+    }
+    
+    navigationController.pushViewController(viewController, animated: animated)
+
+  }
+  
+  private func instantiateViewController(identifier: String) -> UIViewController {
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    return storyboard.instantiateViewController(withIdentifier: identifier)
+  }
+}
+
+// MARK: - StoreSubscriber
+// 3
+extension AppRouter: StoreSubscriber {
+  func newState(state: RoutingState) {
+    // 4
+    let shouldAnimate = navigationController.topViewController != nil
+    // 5
+    pushViewController(identifier: state.navigationState.rawValue, animated: shouldAnimate)
   }
 }

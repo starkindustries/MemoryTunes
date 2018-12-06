@@ -27,10 +27,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
+import ReSwift
 
 struct MemoryCard {
   let imageUrl: String
   var isFlipped: Bool
   var isAlreadyGuessed: Bool
+}
+
+struct GameState: StateType {
+  var memoryCards: [MemoryCard]
+  // 1
+  var showLoading: Bool
+  // 2
+  var gameFinished: Bool
 }
